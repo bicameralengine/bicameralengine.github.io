@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bicameral Solar Engine — Season Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#191919;--panel:#211e19;--gold:#bd954d;--cream:#f7f0e3;--muted:#c4b9a7;--border:#59472c;--winter:#88a9c9;--spring:#86b79b;--summer:#e0bb6a;--fall:#c88e79}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#30291e 0%,var(--bg) 63%);color:var(--cream);font-family:'DM Mono',monospace;padding:34px 16px 28px}
+main{max-width:900px;margin:auto}a{color:var(--gold)}header{text-align:center;margin-bottom:28px}.logo{display:block;width:80px;height:80px;object-fit:contain;margin:0 auto 15px}.logo[hidden]{display:none}[hidden]{display:none!important}
+.overline,.subtitle,.eyebrow{font-size:10px;letter-spacing:3px;color:var(--muted)}h1,h2,.big,.metric{font-family:'Cormorant Garamond',serif}h1{font-size:clamp(30px,5vw,46px);margin:7px 0 8px;line-height:1.1}.rule{width:90px;height:1px;margin:12px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}.subtitle{font-size:10px}
+.toolbar,.panel{background:rgba(33,30,25,.88);border:1px solid #55442b;border-radius:11px;padding:20px 24px;margin:15px 0;box-shadow:0 10px 32px #0002}
+.toolbar{display:flex;flex-wrap:wrap;align-items:end;gap:16px;justify-content:space-between}.input-wrap{flex:1;min-width:160px}.input-wrap label{display:block;margin-bottom:9px}.input-row{display:flex;gap:9px}
+input{width:100%;min-width:0;background:#191919;color:var(--cream);border:1px solid #675638;border-radius:5px;padding:12px;font:15px 'DM Mono',monospace}input:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+button{cursor:pointer;border-radius:5px;font:11px 'DM Mono',monospace;letter-spacing:1px;padding:12px 16px;border:1px solid #79623e;background:#372d20;color:var(--cream)}button:hover{border-color:var(--gold);background:#453723}button.active{background:var(--gold);color:#171511;border-color:var(--gold)}.toggle{display:flex;gap:7px;flex-wrap:wrap}
+#message{font-size:11px;color:#e9ad9c;min-height:14px;margin:8px 0 0}.panel-top{display:flex;flex-wrap:wrap;align-items:start;justify-content:space-between;gap:16px}.big{font-size:42px;color:var(--gold);line-height:1.1;margin:5px 0}.date{font-size:13px;color:var(--muted);letter-spacing:1px}
+.metric{text-align:right;font-size:34px;color:var(--cream)}.metric small{display:block;font:9px 'DM Mono',monospace;letter-spacing:2px;color:var(--muted)}
+.chart-wrap{margin:15px 0 5px;overflow:hidden}.chart-wrap svg{width:100%;height:auto;display:block}.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:10px;color:var(--muted);margin:10px 0}.key{display:inline-block;width:17px;height:2px;vertical-align:middle;margin-right:7px;background:var(--gold)}.key.marker{background:var(--cream)}.key.boundary{background:var(--muted)}
+.footrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid #56452c;padding-top:16px;margin-top:12px;color:var(--muted);font-size:11px}.footrow strong{color:var(--cream);font-weight:400}
+.note{font-size:10px;line-height:1.8;color:#b8ae9e;margin-top:14px}.footer{text-align:center;font-size:9px;color:#948675;margin:24px auto;line-height:1.8}.help{font-size:11px;color:var(--muted);line-height:1.8;margin:6px 0 0}
+@media(max-width:560px){body{padding:18px 10px}.toolbar,.panel{padding:16px 12px}.metric{font-size:27px}.big{font-size:36px}.chart-wrap{margin-left:-6px;margin-right:-6px}.toggle{width:100%}.toggle button{flex:1}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<a href="index.html" aria-label="Return to BSE home"><img class="logo" src="logo.png" alt="BSE logo" onerror="this.hidden=true"></a>
+<div class="overline">THE</div><h1>Bicameral Solar Engine</h1><div class="rule"></div>
+<div class="subtitle">SEASON EXPLORER</div>
+</header>
+<section class="toolbar" aria-label="Explorer controls">
+<div class="input-wrap"><label class="eyebrow" for="year">SELECT YEAR</label><div class="input-row"><input id="year" type="number" step="1" min="1508" max="2400" placeholder="Enter a year"><button id="engage">ENGAGE</button></div></div>
+<div><div class="eyebrow" style="margin-bottom:9px">VIEW</div><div class="toggle" role="group" aria-label="Chart scale"><button class="active" id="seasonBtn" aria-pressed="true">SEASON</button><button id="spanBtn" aria-pressed="false">43-YEAR SPAN</button></div></div>
+<div id="message" role="status" aria-live="polite"></div>
+</section>
+<div id="emptyState" class="panel" style="text-align:center;padding:52px 24px;color:var(--muted);font-size:12px;letter-spacing:2px">AWAITING INPUT<br><span style="display:block;margin-top:14px;font-size:10px;letter-spacing:1px">Enter a year and press ENGAGE to explore the BSE.</span></div>
+<section class="panel" id="resultPanel" aria-label="BSE modulation curve" hidden>
+<div class="panel-top">
+<div><div class="eyebrow" id="viewLabel">CURRENT SEASON</div><div class="big" id="phase">Winter</div><div class="date" id="interval">2024 — 2035</div></div>
+<div><div class="metric"><small>SELECTED YEAR</small><span id="selected">2026</span></div><div class="metric" style="font-size:25px;margin-top:7px"><small>CALCULATED T(t)</small><span id="force">—</span></div></div>
+</div>
+<div class="chart-wrap"><svg id="chart" viewBox="0 0 820 330" role="img" aria-labelledby="chartTitle chartDesc"><title id="chartTitle">BSE modulation curve</title><desc id="chartDesc">Calculated modulation and selected year, with calendar boundaries.</desc></svg></div>
+<div class="legend"><span><i class="key"></i>CALCULATED T(t)</span><span><i class="key marker"></i>SELECTED YEAR</span><span><i class="key boundary"></i>CALENDAR BOUNDARY</span></div>
+<div class="footrow"><span>START <strong id="start">2024</strong></span><span>POSITION <strong id="position">—</strong></span><span>END <strong id="end">2035</strong></span></div>
+<p class="note">The curve plots the T(t) equation from the existing Phase Calendar. The vertical marker identifies the selected year; boundary labels use the BSE calendar’s integer-year leap sequence (11 / 11 / 11 / 10). The curve is a calculated model output, not observed solar activity. Dates from 2024 onward are projected.</p>
+</section>
+<p class="help">Switch views to see the same selected year within its Season or the surrounding 43-year Span. Enter another year to explore a different interval.</p>
+<footer class="footer">© 2026 Nicholas Khan · BICAMERAL SOLAR ENGINE<br>Standalone explorer · <a href="phase-calendar.html">Phase Calendar</a></footer>
+</main>
+<script>
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const palette={Winter:"#88a9c9",Spring:"#86b79b",Summer:"#e0bb6a",Fall:"#c88e79"};
+const namesBefore=["Winter","Spring","Summer","Fall"];
+const namesAfter=["Winter","Spring","Summer","Fall"];
+const durations=[11,11,11,10];
+let selectedYear=null, view="season";
+const $=id=>document.getElementById(id);
+function spanFor(y){const k=Math.floor((y-2024)/43);return {start:2024+43*k,end:2024+43*(k+1)};}
+function seasonFor(y){
+  const span=spanFor(y);let start=span.start;
+  for(let i=0;i<4;i++){let end=start+durations[i];if(y>=start&&y<end)return {start,end,name:(span.start>=2024?namesAfter:namesBefore)[i],index:i,span};start=end;}
+  throw Error("Calendar lookup failed");
+}
+function force(t){
+  return 48/73*Math.sin(2*Math.PI*(t-1841)/21.5)
+    +24/73*Math.sin(2*Math.PI*(t-1841)/43)
+    +(t<2024?1:-1)/73;
+}
+function svg(tag,attrs,text){
+  const el=document.createElementNS(NS,tag);
+  for(const [k,v] of Object.entries(attrs||{}))el.setAttribute(k,v);
+  if(text!==undefined)el.textContent=text;
+  $("chart").appendChild(el);return el;
+}
+function render(){
+  const s=seasonFor(selectedYear), span=s.span, isSpan=view==="span";
+  const left=isSpan?span.start:s.start,right=isSpan?span.end:s.end;
+  const color=palette[s.name], plot={l:56,r:790,t:28,b:268};
+  const x=t=>plot.l+(t-left)/(right-left)*(plot.r-plot.l);
+  const y=v=>plot.b-(v+1.05)/2.1*(plot.b-plot.t);
+  const chart=$("chart");while(chart.firstChild)chart.removeChild(chart.firstChild);
+  const title=document.createElementNS(NS,"title");title.id="chartTitle";title.textContent=`BSE T(t), ${left} to ${right}`;chart.appendChild(title);
+  const desc=document.createElementNS(NS,"desc");desc.id="chartDesc";desc.textContent=`Selected year ${selectedYear}, ${s.name}, T(t) ${force(selectedYear).toFixed(3)}.`;chart.appendChild(desc);
+  const segments=isSpan?[span.start,span.start+11,span.start+22,span.start+33,span.end]:[left,right];
+  if(isSpan){for(let i=0;i<4;i++)svg("rect",{x:x(segments[i]),y:plot.t,width:x(segments[i+1])-x(segments[i]),height:plot.b-plot.t,fill:palette[(span.start>=2024?namesAfter:namesBefore)[i]],"fill-opacity":".045"});}
+  for(const v of [-1,-.5,0,.5,1]){
+    svg("line",{x1:plot.l,x2:plot.r,y1:y(v),y2:y(v),stroke:"#b7a88d","stroke-opacity":v===0?".42":".15","stroke-dasharray":v===0?"":"3 5"});
+    svg("text",{x:45,y:y(v)+4,"text-anchor":"end",fill:"#a99d8a","font-size":"11","font-family":"DM Mono,monospace"},v.toFixed(1));
+  }
+  segments.forEach((t,i)=>{
+    const px=x(t);
+    svg("line",{x1:px,x2:px,y1:plot.t,y2:plot.b,stroke:"#c4b9a7","stroke-opacity":".40","stroke-dasharray":"3 5"});
+    const anchor=i===0?"start":i===segments.length-1?"end":"middle";
+    svg("text",{x:px,y:plot.b+23,"text-anchor":anchor,fill:"#c4b9a7","font-size":"13","font-family":"DM Mono,monospace"},String(t));
+    if(isSpan&&i<4){const n=(span.start>=2024?namesAfter:namesBefore)[i];svg("text",{x:(px+x(segments[i+1]))/2,y:plot.t+15,"text-anchor":"middle",fill:palette[n],"font-size":"11","font-family":"DM Mono,monospace","letter-spacing":"1"},n.toUpperCase());}
+  });
+  // Break the curve at 2024 because G3 changes discontinuously there.
+  const cuts=[left,...(left<2024&&right>2024?[2024]:[]),right];
+  for(let j=0;j<cuts.length-1;j++){
+    const a=cuts[j],b=cuts[j+1],N=Math.max(80,Math.ceil((b-a)*20));
+    let d="";
+    for(let i=0;i<=N;i++){
+      let t=a+(b-a)*i/N;
+      if(j===0&&b===2024&&i===N)t=2024-1e-8;
+      d+=(i?"L":"M")+x(t).toFixed(2)+" "+y(force(t)).toFixed(2)+" ";
+    }
+    svg("path",{d,fill:"none",stroke:"#bd954d","stroke-width":"2.8","stroke-linecap":"round","stroke-linejoin":"round"});
+  }
+  const px=x(selectedYear),py=y(force(selectedYear));
+  svg("line",{x1:px,x2:px,y1:plot.t,y2:plot.b,stroke:"#f7f0e3","stroke-width":"1.5","stroke-dasharray":"5 5"});
+  svg("circle",{cx:px,cy:py,r:"6",fill:"#f7f0e3",stroke:"#bd954d","stroke-width":"2"});
+  // Keep the year annotation within the plotting area near either edge.
+  svg("text",{x:Math.min(plot.r-10,Math.max(plot.l+10,px)),y:plot.t-10,"text-anchor":"middle",fill:"#f7f0e3","font-size":"13","font-family":"DM Mono,monospace"},String(selectedYear));
+  $("phase").textContent=isSpan?"43-Year Span":s.name;
+  $("phase").style.color=isSpan?"#bd954d":color;
+  $("viewLabel").textContent=isSpan?"CURRENT SPAN":"CURRENT SEASON";
+  $("interval").textContent=`${left} — ${right}`;
+  $("selected").textContent=selectedYear;
+  $("force").textContent=(force(selectedYear)>=0?"+":"")+force(selectedYear).toFixed(3);
+  $("start").textContent=left;$("end").textContent=right;
+  $("position").textContent=((selectedYear-left)/(right-left)*100).toFixed(1)+"%";
+  $("seasonBtn").classList.toggle("active",!isSpan);$("spanBtn").classList.toggle("active",isSpan);
+  $("seasonBtn").setAttribute("aria-pressed",String(!isSpan));$("spanBtn").setAttribute("aria-pressed",String(isSpan));
+}
+function engage(){
+  const n=Number($("year").value);
+  if(!Number.isInteger(n)||n<1508||n>2400){$("message").textContent="Enter a whole year from 1508 to 2400.";return;}
+  $("message").textContent="";selectedYear=n;
+  $("emptyState").hidden=true;$("resultPanel").hidden=false;render();
+}
+$("engage").addEventListener("click",engage);
+$("year").addEventListener("keydown",e=>{if(e.key==="Enter")engage();});
+$("seasonBtn").addEventListener("click",()=>{view="season";if(selectedYear!==null)render();});
+$("spanBtn").addEventListener("click",()=>{view="span";if(selectedYear!==null)render();});
+</script>
+</body>
+</html>
