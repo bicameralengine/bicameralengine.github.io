@@ -1,1 +1,221 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive Models | Bicameral Solar Engine</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 50% 0%, #30291e, #191919 65%);
+      color: #f7f0e3;
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 48px 20px 36px;
+    }
+
+    .logo {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      color: #bd954d;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    h1, h2 {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 52px);
+      font-weight: 600;
+      margin: 12px 0;
+    }
+
+    .rule {
+      width: 80px;
+      height: 1px;
+      background: #bd954d;
+      margin: 18px auto;
+    }
+
+    .intro {
+      max-width: 620px;
+      margin: 0 auto;
+      color: #c4b9a7;
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      padding: 20px;
+      border-top: 1px solid #443724;
+      border-bottom: 1px solid #443724;
+    }
+
+    nav a {
+      color: #c4b9a7;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+
+    nav a:hover, nav a.active {
+      color: #bd954d;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 55px auto;
+      padding: 0 20px;
+    }
+
+    .section-label {
+      color: #bd954d;
+      font-size: 10px;
+      letter-spacing: 3px;
+      margin-bottom: 22px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: #211e19;
+      border: 1px solid #59472c;
+      border-radius: 10px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-number {
+      color: #bd954d;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .card h2 {
+      font-size: 32px;
+      font-weight: 600;
+      margin: 18px 0 12px;
+    }
+
+    .card p {
+      color: #c4b9a7;
+      font-size: 11px;
+      line-height: 2;
+      flex: 1;
+    }
+
+    .card a {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 28px;
+      padding: 13px 18px;
+      background: #bd954d;
+      color: #191919;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .card a:hover {
+      background: #d5b477;
+    }
+
+    footer {
+      text-align: center;
+      color: #948675;
+      font-size: 9px;
+      letter-spacing: 1px;
+      padding: 35px 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="BSE logo" class="logo">
+    </a>
+
+    <div class="eyebrow">THE BICAMERAL SOLAR ENGINE</div>
+    <h1>Interactive Models</h1>
+    <div class="rule"></div>
+
+    <p class="intro">
+      Explore the temporal architecture of the Bicameral Solar
+      Engine through interactive visualizations of its fixed
+      calendar and calculated modulation.
+    </p>
+  </header>
+
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="papers.html">PAPERS</a>
+    <a href="data.html">DATA</a>
+    <a href="models.html" class="active">INTERACTIVE MODELS</a>
+  </nav>
+
+  <main>
+    <div class="section-label">AVAILABLE MODELS</div>
+
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-number">MODEL 01</div>
+        <h2>Mechanical Phase Calendar</h2>
+        <p>
+          Enter a calendar year to examine its position within
+          the BSE's nested temporal structure. Explore its
+          Season, G2 phase, larger cycle, and calculated
+          systemic modulation.
+        </p>
+        <a href="phase-calendar.html">OPEN CALENDAR →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-number">MODEL 02</div>
+        <h2>Season Explorer</h2>
+        <p>
+          Explore the calculated T(t) curve within an individual
+          Season or expand the view to its complete 43-year
+          seasonal sequence, with calendar boundaries and
+          a movable year marker.
+        </p>
+        <a href="season-explorer.html">OPEN EXPLORER →</a>
+      </article>
+
+    </div>
+  </main>
+
+  <footer>
+    © 2026 NICHOLAS KHAN · BICAMERAL SOLAR ENGINE
+  </footer>
+</body>
+</html>
+
