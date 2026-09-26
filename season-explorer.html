@@ -57,8 +57,8 @@ const namesAfter=["Winter","Spring","Summer","Fall"];
 const durations=[11,11,11,10];
 let selectedYear=null, view="season";
 const $=id=>document.getElementById(id);
-function spanFor(y){const k=Math.floor((y-2024)/43);return {start:2024+43*k,end:2024+43*(k+1)};}
-function seasonFor(y){
+function spanFor(y) {const k = Math.floor((y - 1841) / 43);return { start: 1841 + 43 * k, end: 1841 + 43 * (k + 1) };}
+  function seasonFor(y){
   const span=spanFor(y);let start=span.start;
   for(let i=0;i<4;i++){let end=start+durations[i];if(y>=start&&y<end)return {start,end,name:(span.start>=2024?namesAfter:namesBefore)[i],index:i,span};start=end;}
   throw Error("Calendar lookup failed");
